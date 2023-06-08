@@ -1,0 +1,3 @@
+name: grocery-list
+runtime: nodejs
+description: Deploying a MERN-stack app on DigitalOcean

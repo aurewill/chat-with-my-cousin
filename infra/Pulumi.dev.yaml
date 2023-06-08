@@ -1,0 +1,3 @@
+config:
+  grocery-list:branch: main
+  grocery-list:repo: austinwilliams2021/fullstack-pulumi-mern-digitalocean
