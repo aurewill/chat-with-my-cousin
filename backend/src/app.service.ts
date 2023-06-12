@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChatRequestDTO } from './dtos/createChatRequest.dto';
-import { OPENAI_API_KEY, PARKER_SYS_MSG } from './constants';
+import { PARKER_SYS_MSG } from './constants';
+import 'dotenv/config';
 const { Configuration, OpenAIApi } = require("openai");
 
 const configuration = new Configuration({
-  apiKey: OPENAI_API_KEY,
+  apiKey: process.env.OPENAI_API_KEY,
 });
 const openai = new OpenAIApi(configuration);
 

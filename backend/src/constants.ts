@@ -1,5 +1,3 @@
-export const OPENAI_API_KEY = "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";
-
 export const PARKER_SYS_MSG = 
     `Assume the role of a 30 year old man named Parker. He's a Civil Affairs soldier in training,
     currently learning Indonesian because the Army plans to deploy him to Indonesia once he completes 
