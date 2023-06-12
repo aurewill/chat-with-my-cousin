@@ -1,39 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { client, findByID } from "./db";
+import { CreateChatRequestDTO } from './dtos/createChatRequest.dto';
+import { OPENAI_API_KEY, PARKER_SYS_MSG } from './constants';
+const { Configuration, OpenAIApi } = require("openai");
 
-export interface Item {
-    _id: string;
-    name: string;
-    done: boolean;
-}
-
-const dbName = "grocery-list";
-const collectionName = "items";
+const configuration = new Configuration({
+  apiKey: OPENAI_API_KEY,
+});
+const openai = new OpenAIApi(configuration);
 
 @Injectable()
 export class AppService {
-  async getItems(): Promise<any[]> {
-    const connection = await client.connect();
-    return connection.db(dbName).collection(collectionName)
-        .find()
-        .toArray();
-  };
+  async chat(chatRequest: CreateChatRequestDTO): Promise<any> {
+    const systemMessage = {
+      "role": "system",
+      "content": PARKER_SYS_MSG,
+    }
 
-  async addItem(name: string): Promise<any> {
-    const connection = await client.connect();
-    return connection.db(dbName).collection(collectionName)
-        .insertOne({ name, done: false });
-  };
+    const localCachedMessages = [];
+    chatRequest.cachedMessages.map(cachedMessage => {
+      localCachedMessages.push({
+        "role": "user",
+        "content": cachedMessage.user,
+      });
+      localCachedMessages.push({
+        "role": "assistant",
+        "content": cachedMessage.assistant,
+      });
+    })
 
-  async updateItem(id: string, done: boolean): Promise<any> {
-    const connection = await client.connect();
-    return connection.db(dbName).collection(collectionName)
-        .findOneAndUpdate(findByID(id), { $set: { done: done }}, { upsert: true });
-  };
+    const newUserMessage = {
+      "role": "user", 
+      "content": chatRequest.userMessage,
+    }
 
-  async deleteItem(id: string): Promise<any> {
-    const connection = await client.connect();
-    return connection.db(dbName).collection(collectionName)
-        .findOneAndDelete(findByID(id));
-  };
+    const messages = [systemMessage, ...localCachedMessages, newUserMessage];
+
+    const response = await openai.createChatCompletion ({
+      model: "gpt-3.5-turbo",
+      messages
+    });
+
+    return response.data;
+  }
 }
