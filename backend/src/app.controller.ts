@@ -6,11 +6,11 @@ function sendGeneric501(res: any, e: any) {
   return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(e.message);
 }
 
-@Controller('items')
+@Controller('chat')
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Post('/chat')
+  @Post()
   async chat(@Res() res, @Body() createChatRequestDTO: CreateChatRequestDTO) {
     try {
       const result = await this.appService.chat(createChatRequestDTO);

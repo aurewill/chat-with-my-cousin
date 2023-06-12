@@ -36,7 +36,7 @@ export const Chat = () => {
     const chat = async () => {
         setIsLoading(true);
 
-        const response = await fetch("/api/items/chat", {
+        const response = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ cachedMessages, userMessage }),

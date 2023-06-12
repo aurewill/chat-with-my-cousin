@@ -1,4 +1,4 @@
-export const OPENAI_API_KEY = "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";
+export const OPENAI_API_KEY = "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";
 
 export const PARKER_SYS_MSG = 
     `Assume the role of a 30 year old man named Parker. He's a Civil Affairs soldier in training,
