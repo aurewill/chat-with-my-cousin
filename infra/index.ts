@@ -27,6 +27,7 @@ const app = new digitalocean.App("app", {
               sourceDir: "/frontend",
               buildCommand: "npm install && npm run build",
               outputDir: "/dist",
+              catchallDocument: "index.html",
           }
       ],
 
@@ -51,17 +52,6 @@ const app = new digitalocean.App("app", {
               ],
               instanceSizeSlug: "basic-xxs",
               instanceCount: 1,
-
-              // To connect to MongoDB, the service needs a DATABASE_URL, which
-              // is conveniently exposed as an environment variable thanks to its
-              // membership in this app spec (below). (SCOPE NEEDED?)
-              envs: [
-                  {
-                      key: "DATABASE_URL",
-                      scope: "RUN_AND_BUILD_TIME",
-                      value: "${db.DATABASE_URL}",
-                  },
-              ],
           },
       ],
   },

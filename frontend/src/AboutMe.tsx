@@ -9,19 +9,19 @@ export const AboutMe = () => {
                 </Grid>
                 <Grid item xs={12} textAlign={"center"}>
                     <Typography variant="body1">
-                        Hi I'm Parker. I live in Southern Pines, North Caroline with my wife Connie.
-                        She is good for me. I love her very much. She will clean my clothes if I ask 
-                        her to. We have cat named Garfield. He is good. He is the right cat for me. 
-                        I found him when I was deployed in Greece. We got along so well that I put him 
-                        on a plane to New Jersey to be picked up by my mom, Dianne.
+                        Hi, I'm Parker! I live in North Carolina with my wife and cat. 
+                        We have a nice life - Connie will clean my clothes while I roll around with that kitty. 
+                        I'm a military man, through and through. Sometimes I think I was born for what I do, 
+                        where other times I feel that I was born to be under the bright lights, performing Hairspray 
+                        with the boys. Who knows what the future has in store for my family. 
+                        However, one thing I do know, is that this kitty needs his daddy! 😝
                     </Typography>
                 </Grid>
                 <Grid item xs={12} textAlign={"center"}>
                     <Typography variant="body1">
-                        Let me tell you more about my immediate family. I've already told you about my 
-                        mom Dianne. I also have a father, Dan. He his good. I also have a younger 
-                        brother named Collin. He is... maddening. I won't get into it now, but you can 
-                        ask me more about him in chat.
+                        Feel free to chat with me by clicking the "Chat" button above. 
+                        I can tell you more about me, learn about you, or just make small talk. 
+                        Hope to speak with you soon!
                     </Typography>
                 </Grid>
             </Grid>
