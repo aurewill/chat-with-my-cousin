@@ -1,5 +1,7 @@
 import { 
+    Alert,
     Paper, 
+    Snackbar, 
     Stack, 
     Table, 
     TableBody, 
@@ -12,6 +14,7 @@ import { Fragment, useRef, useState } from "react";
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import PersonIcon from '@mui/icons-material/Person';
 import { Message } from "./Message";
+import { fetchWithTimeout } from "./utils";
 
 export const Chat = () => {
 
@@ -28,6 +31,7 @@ export const Chat = () => {
     const [botResponses, setBotResponses] = useState<string[]>([]);
     const [cachedMessages, setCachedMessages] = useState<cachedMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [showInfoError, setShowInfoError] = useState(false);
 
     // Ref for keeping bottom of page in view
     const messageInputRef = useRef<any>(null);
@@ -36,37 +40,46 @@ export const Chat = () => {
     const chat = async () => {
         setIsLoading(true);
 
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cachedMessages, userMessage }),
-        });
-        const data = await response.json();
-        const receivedMessage = data.choices[0].message.content;
+        try {
+            const response = await fetchWithTimeout("/api/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cachedMessages, userMessage }),
+            });
+            const data = await response.json();
 
-        // Append new user message to local memory and restore input field to empty str
-        setUserMessages([...userMessages, userMessage]);
-        setUserMessage("");
+            const receivedMessage = data.choices[0].message.content;
 
-        // Append new bot response to local memory
-        setBotResponses([...botResponses, receivedMessage])
+            // Append new user message to local memory and restore input field to empty str
+            setUserMessages([...userMessages, userMessage]);
+            setUserMessage("");
 
-        const newCachedMessage = {
-            user: userMessage,
-            assistant: receivedMessage,
-        }
+            // Append new bot response to local memory
+            setBotResponses([...botResponses, receivedMessage])
 
-        // reset cached messages (dependent on whether or not cache is full)
-        if (cachedMessages.length < maxCachedMessages) {
-            setCachedMessages([...cachedMessages, newCachedMessage]);
-        } else {
-            const withoutFirstCachedMessage = cachedMessages.slice(1);
-            setCachedMessages([...withoutFirstCachedMessage, newCachedMessage]);
-        }
+            const newCachedMessage = {
+                user: userMessage,
+                assistant: receivedMessage,
+            }
 
-        if (messageInputRef.current) {
-            messageInputRef.current.scrollIntoView();
-            messageInputRef.current.focus();
+            // reset cached messages (dependent on whether or not cache is full)
+            if (cachedMessages.length < maxCachedMessages) {
+                setCachedMessages([...cachedMessages, newCachedMessage]);
+            } else {
+                const withoutFirstCachedMessage = cachedMessages.slice(1);
+                setCachedMessages([...withoutFirstCachedMessage, newCachedMessage]);
+            }
+
+            if (messageInputRef.current) {
+                messageInputRef.current.scrollIntoView();
+                messageInputRef.current.focus();
+            }
+        } catch (err: any) {
+            if (err.name === 'AbortError') {
+                setShowInfoError(true);
+            } else {
+                alert("Different error");
+            }
         }
 
         setIsLoading(false);
@@ -118,6 +131,17 @@ export const Chat = () => {
                 chat={chat}
                 isLoading={isLoading}
             />
+
+            <Snackbar 
+                open={showInfoError} 
+                autoHideDuration={6000} 
+                onClose={() => setShowInfoError(false)} 
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={() => setShowInfoError(false)} severity="info" sx={{ width: '100%' }}>
+                    Please try again.
+                </Alert>
+            </Snackbar>
         </Stack>
     </div>;
 }
