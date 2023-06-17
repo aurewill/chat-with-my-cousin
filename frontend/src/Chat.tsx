@@ -20,7 +20,7 @@ export const Chat = () => {
         assistant: string,
     }
 
-    const maxCachedMessages = 5;
+    const maxCachedMessages = 15;
 
     // The local component state
     const [userMessage, setUserMessage] = useState("");
