@@ -1,5 +1,4 @@
-import { Container, Grid } from "@mui/material";
-import { Chat } from "./Chat";
+import { Container } from "@mui/material";
 import { NavBar } from "./NavBar";
 import { Outlet } from "react-router-dom";
 

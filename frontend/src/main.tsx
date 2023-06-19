@@ -5,6 +5,14 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Chat } from "./Chat";
 import { AboutMe } from "./AboutMe";
 import { Press } from "./Press";
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 const router = createBrowserRouter([
     {
@@ -29,7 +37,10 @@ const router = createBrowserRouter([
 
 ReactDOM.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <RouterProvider router={router} />
+        </ThemeProvider>
     </React.StrictMode>,
     document.getElementById("root"),
 );

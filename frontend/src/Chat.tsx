@@ -32,6 +32,7 @@ export const Chat = () => {
     const [cachedMessages, setCachedMessages] = useState<cachedMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [showInfoError, setShowInfoError] = useState(false);
+    const [showDangerError, setShowDangerError] = useState(false);
 
     // Ref for keeping bottom of page in view
     const messageInputRef = useRef<any>(null);
@@ -78,7 +79,7 @@ export const Chat = () => {
             if (err.name === 'AbortError') {
                 setShowInfoError(true);
             } else {
-                alert("Different error");
+                setShowDangerError(true);
             }
         }
 
@@ -100,7 +101,7 @@ export const Chat = () => {
                         {userMessages.map((userMessage, idx) => {
                             return (
                                 <Fragment key={`messageCouple-${idx}`}>
-                                    <TableRow key={`userMessage-${idx}`} sx={{backgroundColor: "#EEEEEE"}}>
+                                    <TableRow key={`userMessage-${idx}`}>
                                         <TableCell width={5}>
                                             <PersonIcon />
                                         </TableCell>
@@ -108,7 +109,7 @@ export const Chat = () => {
                                             <Typography variant="body1">{userMessage}</Typography>
                                         </TableCell>
                                     </TableRow>
-                                    <TableRow key={`botResponse-${idx}`} sx={{backgroundColor: "#C4C7B6"}}>
+                                    <TableRow key={`botResponse-${idx}`} sx={{backgroundColor: "#454B1B"}}>
                                         <TableCell width={5}>
                                             <MilitaryTechIcon />
                                         </TableCell>
@@ -138,7 +139,17 @@ export const Chat = () => {
                 onClose={() => setShowInfoError(false)} 
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
             >
-                <Alert onClose={() => setShowInfoError(false)} severity="info" sx={{ width: '100%' }}>
+                <Alert onClose={() => setShowInfoError(false)} severity="warning" sx={{ width: '100%' }}>
+                    Please try again.
+                </Alert>
+            </Snackbar>
+            <Snackbar 
+                open={showDangerError} 
+                autoHideDuration={6000} 
+                onClose={() => setShowDangerError(false)} 
+                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            >
+                <Alert onClose={() => setShowDangerError(false)} severity="error" sx={{ width: '100%' }}>
                     Please try again.
                 </Alert>
             </Snackbar>
