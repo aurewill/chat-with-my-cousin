@@ -7,7 +7,9 @@ export const Message = ({
     setUserMessage, 
     chatOnEnter, 
     chat, 
-    isLoading
+    isLoading,
+    sendMessageEnabled,
+    setSendMessageEnabled,
 }: any) => {
     return (
         <TextField
@@ -18,13 +20,32 @@ export const Message = ({
             autoComplete="off"
             ref={messageInputRef}
             value={userMessage}
-            onChange={e => setUserMessage(e.target.value)}
-            onKeyDown={chatOnEnter}
+            onChange={e => {
+                setUserMessage(e.target.value);
+                if (e.target.value) {
+                    setSendMessageEnabled(true);
+                } else {
+                    setSendMessageEnabled(false);
+                }
+            }}
+            onKeyDown={e => {
+                if (sendMessageEnabled) {
+                    chatOnEnter(e);
+                }
+            }}
             InputProps={{endAdornment: 
                 <IconButton
-                    onClick={chat}
+                    onClick={e => {
+                        if (sendMessageEnabled) {
+                            chat();
+                        }
+                    }}
                 >
-                    {!isLoading && <SendIcon />}
+                    {!isLoading && 
+                        <SendIcon
+                            color={sendMessageEnabled ? "primary" : "disabled"}
+                        />
+                    }
                     {isLoading && <CircularProgress size={25}/>}
                 </IconButton>
             }}

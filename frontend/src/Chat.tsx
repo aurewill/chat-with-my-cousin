@@ -14,7 +14,14 @@ import { Fragment, useRef, useState } from "react";
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import PersonIcon from '@mui/icons-material/Person';
 import { Message } from "./Message";
-import { fetchWithTimeout } from "./utils";
+import fetchRetry from 'fetch-retry';
+
+const fetch = fetchRetry(globalThis.fetch, {
+    retries: 3,
+    retryDelay: function(attempt, _error, _response) {
+        return Math.pow(2, attempt + 1) * 1000; // 2000, 4000, 8000
+    }
+});
 
 export const Chat = () => {
 
@@ -33,6 +40,7 @@ export const Chat = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showInfoError, setShowInfoError] = useState(false);
     const [showDangerError, setShowDangerError] = useState(false);
+    const [sendMessageEnabled, setSendMessageEnabled] = useState(false);
 
     // Ref for keeping bottom of page in view
     const messageInputRef = useRef<any>(null);
@@ -40,9 +48,10 @@ export const Chat = () => {
     // Make an HTTP POST to the chat endpoint.
     const chat = async () => {
         setIsLoading(true);
+        setSendMessageEnabled(false);
 
         try {
-            const response = await fetchWithTimeout("/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ cachedMessages, userMessage }),
@@ -131,6 +140,8 @@ export const Chat = () => {
                 chatOnEnter={chatOnEnter}
                 chat={chat}
                 isLoading={isLoading}
+                sendMessageEnabled={sendMessageEnabled}
+                setSendMessageEnabled={setSendMessageEnabled}
             />
 
             <Snackbar 
